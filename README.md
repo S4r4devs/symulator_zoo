@@ -62,4 +62,26 @@ Zrealizowane:
     - command
     - template method
     - +static factory method (do implementacji wielu konstruktorów w pliku zookeepers.py)
+   
+## Plan dalszego rozwoju projektu
+
+Dodatkowe aktywności oprócz karmienia:
+  - pojenie
+  - sprzątanie wybiegu
+  - wyprowadzanie zwierząt
+  - dawanie zwierzętom różnych rzeczy typu: słoń-piłka, małpa grzechotka.
+
+Może być też abstrakcyjnie (aktywności) tak aby było to ciekawe np. wyprowadzanie pingwinów na spacer po zoo.
+
+Jeśli chodzi o zwierzęta to np na początek można tylko dodawać lwy, słonie, małpy lub pingwiny, każde zwierze może jeść tylko okresloną żywność czyli małpe nakarmimy tylko bananem, Iwa tylko mięsem itd. I np. powinien wystąpić komunikat typu "Nakarmiłeś zwierzę niewłaściwym jedzeniem".
+
+Można zrobić paski, które by pokazywały np. poziom najedzenia się zwierzeka lub że trzeba posprzątać bo ma brudno albo że zwierzę jest nieszczęśliwe bo nie poszło na spacer lub nie dostało zabawki. Jak wszystkie paski lub część z nich (do dogadania i ustalenia) będą na zerowym poziomie to zwierze umiera/znika.
+
+Obrazki zrobione za pomocą AI:
+Czyli np. szczęśliwy lew, nieszczęśliwy, bawiący się np piłką, jedzący.
+Obrazek by się pojawiał na stronie w momencie jakiejś aktywności np karmimy lwa i pojawia się obrazek z lwem, który je.
+
+Odnośnie zapasów jedzenia jest to kwestia do ustalenia (musimy ustalić jak to będzie działać i czy zapasy będą ubywać z każdym nakarmieniem itp)
+
+Odnośnie Zookeepers jest to kwestia do ustalenia (musimy ustalić po co są, jakie pełnią funkcje, czy np. my jesteśmy tymi zookeepers itp.)
 
