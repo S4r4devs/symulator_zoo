@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Zoo Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input {
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    #output {
+      white-space: pre-wrap;
+      background-color: #eee;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+    .message {
+      margin-top: 10px;
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zoo Manager</h1>
+
+  <!-- Animal Section -->
+  <h2>Animals</h2>
+  <button onclick="getAnimals()">Get Animals</button>
+  <input type="text" id="animalName" placeholder="Enter animal name">
+  <button onclick="feedAnimal()">Feed Animal</button>
+  <div id="message" class="message"></div>
+  <table id="animalTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Species</th>
+        <th>Sound</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Animal rows will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <!-- Zookeeper Section -->
+  <h2>Zookeepers</h2>
+  <button onclick="getZookeepers()">Get Zookeepers</button>
+  <input type="text" id="zookeeperName" placeholder="Enter zookeeper name">
+  <button onclick="addZookeeper()">Add Zookeeper</button>
+  <div id="zookeeperMessage" class="message"></div>
+  <table id="zookeeperTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Zookeeper rows will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <!-- Food Section -->
+  <h2>Food Inventory</h2>
+  <button onclick="getFood()">Get Food Inventory</button>
+  <table id="foodTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Food rows will be dynamically added here -->
+    </tbody>
+  </table>
+  <div id="foodMessage" class="message"></div>
+
+  <script>
+    // Fetch and display animals
+    function getAnimals() {
+      fetch("/animals/")
+        .then(res => res.json())
+        .then(data => {
+          const tableBody = document.getElementById("animalTable").querySelector("tbody");
+          tableBody.innerHTML = ""; // Clear existing rows
+          data.forEach(animal => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${animal.name}</td>
+              <td>${animal.species}</td>
+              <td>${animal.sound}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+          document.getElementById("message").textContent = "Animals loaded successfully!";
+        })
+        .catch(err => {
+          document.getElementById("message").textContent = "Error fetching animals.";
+        });
+    }
+
+    // Feed an animal
+    function feedAnimal() {
+      const name = document.getElementById("animalName").value;
+      fetch(`/feed/${name}/`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("message").textContent = `Preparation: ${data.preparation}. Feeding: ${data.feeding}.`;
+        })
+        .catch(err => {
+          document.getElementById("message").textContent = "Error feeding animal.";
+        });
+    }
+
+    // Fetch and display zookeepers
+    function getZookeepers() {
+      fetch("/zookeepers/")
+        .then(res => res.json())
+        .then(data => {
+          const tableBody = document.getElementById("zookeeperTable").querySelector("tbody");
+          tableBody.innerHTML = ""; // Clear existing rows
+          data.forEach(zookeeper => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${zookeeper.name}</td>`;
+            tableBody.appendChild(row);
+          });
+          document.getElementById("zookeeperMessage").textContent = "Zookeepers loaded successfully!";
+        })
+        .catch(err => {
+          document.getElementById("zookeeperMessage").textContent = "Error fetching zookeepers.";
+        });
+    }
+
+    // Add a new zookeeper
+    function addZookeeper() {
+      const name = document.getElementById("zookeeperName").value;
+      fetch("/zookeepers/add/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.message) {
+            document.getElementById("zookeeperMessage").textContent = data.message;
+            getZookeepers(); // Refresh the zookeeper list
+          } else {
+            document.getElementById("zookeeperMessage").textContent = data.error;
+          }
+        })
+        .catch(err => {
+          document.getElementById("zookeeperMessage").textContent = "Error adding zookeeper.";
+        });
+    }
+
+    // Fetch and display food inventory
+    function getFood() {
+      fetch("/food/")
+        .then(res => res.json())
+        .then(data => {
+          const tableBody = document.getElementById("foodTable").querySelector("tbody");
+          tableBody.innerHTML = ""; // Clear existing rows
+          data.forEach(food => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${food.name}</td>
+              <td>${food.quantity}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+          document.getElementById("foodMessage").textContent = "Food inventory loaded successfully!";
+        })
+        .catch(err => {
+          document.getElementById("foodMessage").textContent = "Error fetching food inventory.";
+        });
+    }
+  </script>
+</body>
+</html>
