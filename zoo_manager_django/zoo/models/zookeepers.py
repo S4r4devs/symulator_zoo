@@ -1,4 +1,10 @@
 class Zookeeper:
+    _accounts = {
+        "Alex": "alex123",
+        "Justyna": "justyna123",
+        "Sara": "sara123"
+    }
+
     def __init__(self, name):
         self.name = name
 
@@ -16,3 +22,8 @@ class Zookeeper:
     def validate_name(name):
         """Validate the name of a zookeeper."""
         return isinstance(name, str) and len(name) > 2
+
+    @staticmethod
+    def authenticate(name, password):
+        """Authenticate a zookeeper by name and password."""
+        return Zookeeper._accounts.get(name) == password
