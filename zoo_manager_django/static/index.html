@@ -2,119 +2,279 @@
 <html>
 <head>
   <title>Zoo Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --zoo-green: #32cd32; /* grass green */
+    }
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f9f9f9;
+      font-family: 'Press Start 2P', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://plus.unsplash.com/premium_vector-1722611178989-daa80dbedbbc?q=80&w=1800&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') center center/cover no-repeat fixed, linear-gradient(135deg, #232526 0%, #414345 100%);
+      color: #fff;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    .arcade-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      background: url('https://www.transparenttextures.com/patterns/pw-maze-white.png');
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    h1, h2 {
+      color: var(--zoo-green);
+      text-shadow: 0 2px 8px #232526, 0 0 16px var(--zoo-green);
+      letter-spacing: 2px;
+      background: none;
     }
     h1 {
-      color: #333;
+      font-size: 2.2em;
+      margin-top: 24px;
+      margin-bottom: 16px;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+    h2 {
+      font-size: 1.2em;
+      margin-top: 32px;
+      margin-bottom: 12px;
     }
     button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
+      background: #0f2027;
+      color: var(--zoo-green);
+      border: 2px solid var(--zoo-green);
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+      font-size: 12px;
       margin: 5px;
+      box-shadow: 0 0 8px var(--zoo-green);
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
     }
     button:hover {
-      background-color: #45a049;
+      background: var(--zoo-green);
+      color: #0f2027;
+      box-shadow: 0 0 16px var(--zoo-green), 0 0 32px var(--zoo-green);
     }
-    input {
+    input, select {
       padding: 10px;
       margin: 5px;
-      border: 1px solid #ccc;
+      border: 2px solid var(--zoo-green);
       border-radius: 4px;
+      background: #232526cc;
+      color: #fff;
+      font-family: 'Press Start 2P', Arial, sans-serif;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
+      background: rgba(20, 20, 20, 0.85);
+      box-shadow: 0 0 16px var(--zoo-green);
+      border-radius: 10px;
+      overflow: hidden;
     }
     th, td {
-      padding: 10px;
+      padding: 12px;
       text-align: left;
+      border-bottom: 1px solid var(--zoo-green);
     }
     th {
-      background-color: #f2f2f2;
-    }
-    #output {
-      white-space: pre-wrap;
-      background-color: #eee;
-      padding: 10px;
-      border: 1px solid #ccc;
-      margin-top: 20px;
+      background: #0f2027cc;
+      color: var(--zoo-green);
     }
     .message {
       margin-top: 10px;
-      color: green;
+      color: var(--zoo-green);
+      text-shadow: 0 0 8px var(--zoo-green);
     }
     .error {
-      color: red;
+      color: #ff0059;
+      text-shadow: 0 0 8px #ff0059;
+    }
+    .status-bar {
+      width: 100px;
+      height: 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #fff;
+      margin: 0 auto;
+      background: #222;
+      overflow: hidden;
+      border: 2px solid #fff;
+      position: relative;
+    }
+    .status-bar-inner {
+      height: 100%;
+      transition: width 0.5s;
+    }
+    .status-happy { background: linear-gradient(90deg, #00ff00 0%, var(--zoo-green) 100%); }
+    .status-neutral { background: linear-gradient(90deg, #ffff00 0%, #ffae00 100%); }
+    .status-sad { background: linear-gradient(90deg, #ff0059 0%, #ffae00 100%); }
+    .animal-emoji {
+      font-size: 1.5em;
+      margin-right: 8px;
+    }
+    .zoo-panel {
+      background: rgba(34, 34, 34, 0.85);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px auto;
+      max-width: 900px;
+    }
+    .log-panel {
+      background: rgba(20, 20, 20, 0.92);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 24px;
+      min-height: 300px;
+      max-height: 600px;
+      overflow-y: auto;
+      box-shadow: 0 0 24px var(--zoo-green);
+      color: var(--zoo-green);
+    }
+    .log-panel h2 {
+      color: var(--zoo-green);
+      text-shadow: 0 0 8px var(--zoo-green);
+      font-size: 1em;
+      margin-top: 0;
+    }
+    #actionLog li {
+      margin-bottom: 10px;
+      border-left: 3px solid var(--zoo-green);
+      padding-left: 10px;
+      word-break: break-word;
     }
   </style>
 </head>
 <body>
-  <h1>Zoo Manager</h1>
+  <div class="arcade-bg"></div>
+  <h1>&#x1F981;&#x1F418;&#x1F412; Zoo Manager &#x1F992;&#x1F993;&#x1F99C;</h1>
+  <div id="loginPanel" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <form id="loginForm" style="background: rgba(34,34,34,0.95); border-radius: 16px; box-shadow: 0 0 32px var(--zoo-green); padding: 40px 32px; display: flex; flex-direction: column; align-items: center; min-width: 320px;">
+      <h2 style="margin-bottom: 24px;">Login</h2>
+      <input type="text" id="loginName" placeholder="Zookeeper name" autocomplete="username" style="width: 220px; margin-bottom: 16px;">
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" style="width: 220px; margin-bottom: 24px;">
+      <button type="button" onclick="login()" style="width: 100%;">Login</button>
+      <div id="loginMessage" class="message" style="margin-top: 18px; text-align: center;"></div>
+      <div style="margin-top: 18px; color: #aaa; font-size: 11px; text-align: center;">
+        <span>Accounts: Alex, Justyna, Sara</span>
+      </div>
+    </form>
+  </div>
 
-  <!-- Animal Section -->
-  <h2>Animals</h2>
-  <button onclick="getAnimals()">Get Animals</button>
-  <input type="text" id="animalName" placeholder="Enter animal name">
-  <button onclick="feedAnimal()">Feed Animal</button>
-  <div id="message" class="message"></div>
-  <table id="animalTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Species</th>
-        <th>Sound</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Animal rows will be dynamically added here -->
-    </tbody>
-  </table>
+  <div id="mainApp" style="display:none;">
+    <div style="display: flex; justify-content: center;">
+      <div class="zoo-panel" style="flex: 1;">
+        <!-- Animal Section -->
+        <h2>Animals</h2>
+        <!-- <button onclick="getAnimals()">Get Animals</button> -->
+        <input type="text" id="animalName" placeholder="Enter animal name">
+        <select id="foodSelect"></select>
+        <button onclick="feedAnimal()">Feed Animal</button>
+        <button onclick="waterAnimal()">Give Water</button>
+        <div id="message" class="message"></div>
+        <table id="animalTable">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Species</th>
+              <th>Age</th>
+              <th>Status</th>
+              <th>Status Bar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Animal rows will be dynamically added here -->
+          </tbody>
+        </table>
 
-  <!-- Zookeeper Section -->
-  <h2>Zookeepers</h2>
-  <button onclick="getZookeepers()">Get Zookeepers</button>
-  <input type="text" id="zookeeperName" placeholder="Enter zookeeper name">
-  <button onclick="addZookeeper()">Add Zookeeper</button>
-  <div id="zookeeperMessage" class="message"></div>
-  <table id="zookeeperTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Zookeeper rows will be dynamically added here -->
-    </tbody>
-  </table>
+        <!-- Zookeeper Section -->
+        <h2>Zookeepers</h2>
+        <!-- <button onclick="getZookeepers()">Get Zookeepers</button> -->
+        <input type="text" id="zookeeperName" placeholder="Enter zookeeper name">
+        <div id="zookeeperMessage" class="message"></div>
+        <table id="zookeeperTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Zookeeper rows will be dynamically added here -->
+          </tbody>
+        </table>
 
-  <!-- Food Section -->
-  <h2>Food Inventory</h2>
-  <button onclick="getFood()">Get Food Inventory</button>
-  <table id="foodTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Quantity</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Food rows will be dynamically added here -->
-    </tbody>
-  </table>
-  <div id="foodMessage" class="message"></div>
-
+        <!-- Food Section -->
+        <h2>Food Inventory</h2>
+        <!-- <button onclick="getFood()">Get Food Inventory</button> -->
+        <table id="foodTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Food rows will be dynamically added here -->
+          </tbody>
+        </table>
+        <div id="foodMessage" class="message"></div>
+      </div>
+      <div id="logPanel" class="log-panel" style="flex: 0 0 320px; margin-left: 24px;">
+        <h2>Action Log</h2>
+        <ul id="actionLog" style="list-style: none; padding: 0; font-size: 12px;"></ul>
+      </div>
+    </div>
+  </div>
   <script>
+    let loggedInZookeeper = null;
+
+    function getAnimalEmoji(species) {
+      switch (species.toLowerCase()) {
+        case "lion": return "&#x1F981;";      // 🦁
+        case "elephant": return "&#x1F418;";  // 🐘
+        case "monkey": return "&#x1F412;";    // 🐒
+        case "penguin": return "&#x1F427;";   // 🐧
+        case "zebra": return "&#x1F993;";     // 🦓
+        case "giraffe": return "&#x1F992;";   // 🦒
+        case "parrot": return "&#x1F99C;";    // 🦜
+        default: return "&#x1F43E;";          // 🐾
+      }
+    }
+
+    function login() {
+      const name = document.getElementById("loginName").value;
+      const password = document.getElementById("loginPassword").value;
+      fetch("/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.zookeeper) {
+            loggedInZookeeper = data.zookeeper;
+            document.getElementById("loginMessage").textContent = "Logged in as " + data.zookeeper;
+            addLogEntry(`<b>${data.zookeeper}</b> logged in`);
+            // Hide login, show main app
+            document.getElementById("loginPanel").style.display = "none";
+            document.getElementById("mainApp").style.display = "";
+            // Fetch all data after login
+            getAnimals();
+            getFood();
+            getZookeepers();
+          } else {
+            document.getElementById("loginMessage").textContent = data.error;
+          }
+        });
+    }
+
     // Fetch and display animals
     function getAnimals() {
       fetch("/animals/")
@@ -123,11 +283,23 @@
           const tableBody = document.getElementById("animalTable").querySelector("tbody");
           tableBody.innerHTML = ""; // Clear existing rows
           data.forEach(animal => {
-            const row = document.createElement("tr");
+            let emoji = "&#x1F610;", barClass = "status-neutral", width = "66%"; // 😐
+            if (animal.status === "happy") { emoji = "&#x1F603;"; barClass = "status-happy"; width = "100%"; } // 😃
+            else if (animal.status === "sad") { emoji = "&#x1F622;"; barClass = "status-sad"; width = "33%"; } // 😢
+            // Animal icon
+            let animalIcon = `<span class="animal-emoji">${getAnimalEmoji(animal.species)}</span>`;
+            let row = document.createElement("tr");
             row.innerHTML = `
+              <td>${animalIcon}</td>
               <td>${animal.name}</td>
               <td>${animal.species}</td>
-              <td>${animal.sound}</td>
+              <td>${animal.age !== undefined ? animal.age : "?"}</td>
+              <td>${emoji} ${animal.status}</td>
+              <td>
+                <div class="status-bar">
+                  <div class="status-bar-inner ${barClass}" style="width:${width};"></div>
+                </div>
+              </td>
             `;
             tableBody.appendChild(row);
           });
@@ -141,13 +313,20 @@
     // Feed an animal
     function feedAnimal() {
       const name = document.getElementById("animalName").value;
-      fetch(`/feed/${name}/`)
+      const food = document.getElementById("foodSelect").value;
+      fetch(`/feed/${name}/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ food }),
+      })
         .then(res => res.json())
         .then(data => {
-          document.getElementById("message").textContent = `Preparation: ${data.preparation}. Feeding: ${data.feeding}.`;
-        })
-        .catch(err => {
-          document.getElementById("message").textContent = "Error feeding animal.";
+          document.getElementById("message").textContent = `Preparation: ${data.preparation}. Feeding: ${data.feeding}. Status: ${data.status}`;
+          getAnimals();
+          getFood();
+          if (loggedInZookeeper && name && food) {
+            addLogEntry(`<b>${loggedInZookeeper}</b> fed <b>${name}</b> with <b>${food}</b>`);
+          }
         });
     }
 
@@ -170,33 +349,20 @@
         });
     }
 
-    // Add a new zookeeper
-    function addZookeeper() {
-      const name = document.getElementById("zookeeperName").value;
-      fetch("/zookeepers/add/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.message) {
-            document.getElementById("zookeeperMessage").textContent = data.message;
-            getZookeepers(); // Refresh the zookeeper list
-          } else {
-            document.getElementById("zookeeperMessage").textContent = data.error;
-          }
-        })
-        .catch(err => {
-          document.getElementById("zookeeperMessage").textContent = "Error adding zookeeper.";
-        });
-    }
-
+  
     // Fetch and display food inventory
     function getFood() {
       fetch("/food/")
         .then(res => res.json())
         .then(data => {
+          const select = document.getElementById("foodSelect");
+          select.innerHTML = "";
+          data.forEach(food => {
+            const option = document.createElement("option");
+            option.value = food.name;
+            option.textContent = `${food.name} (${food.quantity})`;
+            select.appendChild(option);
+          });
           const tableBody = document.getElementById("foodTable").querySelector("tbody");
           tableBody.innerHTML = ""; // Clear existing rows
           data.forEach(food => {
@@ -212,6 +378,24 @@
         .catch(err => {
           document.getElementById("foodMessage").textContent = "Error fetching food inventory.";
         });
+    }
+
+    function waterAnimal() {
+      const name = document.getElementById("animalName").value;
+      fetch(`/water/${name}/`, { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("message").textContent = data.message + " Status: " + data.status;
+          getAnimals();
+          getFood();
+        });
+    }
+
+    function addLogEntry(message) {
+      const log = document.getElementById("actionLog");
+      const li = document.createElement("li");
+      li.innerHTML = message;
+      log.insertBefore(li, log.firstChild); // newest on top
     }
   </script>
 </body>
