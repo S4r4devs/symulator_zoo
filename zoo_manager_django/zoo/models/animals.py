@@ -1,4 +1,5 @@
 import time
+from abc import abstractmethod
 
 class Animal:
     """Base class for all animals."""
@@ -33,27 +34,11 @@ class Animal:
 
     @property
     def status(self):
-        now = time.time()
-        fed_ok = now - self._last_fed < 3600
-        watered_ok = now - self._last_watered < 3600
-        if fed_ok and watered_ok:
-            return "happy"
-        elif fed_ok or watered_ok:
-            return "neutral"
-        else:
-            return "sad"
+        return MoodStateCalculatorTemplate().calculate(self._last_fed, self._last_watered)
 
     @property
     def status_bar(self):
-        now = time.time()
-        fed_ok = now - self._last_fed < 3600
-        watered_ok = now - self._last_watered < 3600
-        if fed_ok and watered_ok:
-            return "green"
-        elif fed_ok or watered_ok:
-            return "yellow"
-        else:
-            return "red"
+        return StatusBarStateCalculator().calculate(self._last_fed, self._last_watered)
 
     def feed(self):
         self._last_fed = time.time()
@@ -87,3 +72,56 @@ class Parrot(Animal):
     """Elephant class inheriting from Animal."""
     def __init__(self, name, age):
         super().__init__(name, species="Parrot", age=age)
+
+
+class StateCalculatorTemplate:
+    """Class to calculate the state of an animal based on its last fed and watered times.
+    Uses the Template Method pattern to define the skeleton of the calculation algorithm.
+    """
+
+    def calculate(self, last_fed, last_watered):
+        now = time.time()
+        fed_ok = now - last_fed < 3600
+        watered_ok = now - last_watered < 3600
+        if fed_ok and watered_ok:
+            return self.low()
+        elif fed_ok or watered_ok:
+            return self.mid()
+        else:
+            return self.high()
+
+    @abstractmethod
+    def low(self):
+        pass
+
+    @abstractmethod
+    def mid(self):
+        pass
+
+    @abstractmethod
+    def high(self):
+        pass
+
+class MoodStateCalculatorTemplate(StateCalculatorTemplate):
+    """Mood state calculator for animals."""
+
+    def low(self):
+        return "happy"
+
+    def mid(self):
+        return "neutral"
+
+    def high(self):
+        return "sad"
+
+class StatusBarStateCalculator(StateCalculatorTemplate):
+    """Status bar state calculator for animals."""
+
+    def low(self):
+        return "green"
+
+    def mid(self):
+        return "yellow"
+
+    def high(self):
+        return "red"
