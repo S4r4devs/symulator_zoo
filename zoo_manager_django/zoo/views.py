@@ -1,11 +1,11 @@
 from django.http import JsonResponse, HttpResponseNotFound, HttpResponseBadRequest
 import json
-import time
 from zoo.models.animals import Lion, Elephant, Monkey, Giraffe, Parrot
 from zoo.models.exceptions import AnimalNotFoundException
 from zoo.models.feeding import HerbivoreFeedingTemplate, CarnivoreFeedingTemplate
 from zoo.models.zookeepers import Zookeeper
 from zoo.models.food import Food, Water
+from zoo.models.commands import FeedCommand
 
 # Sample data
 animals = [
@@ -54,13 +54,9 @@ def feed_animal(request, animal_name):
     food = next((f for f in food_inventory if f.name == food_name and f.name.lower() != "water"), None)
     if not food or food.quantity <= 0:
         return JsonResponse({"error": "Food not available"}, status=400)
-    # Decrement food
-    food.quantity -= 1
-    animal.feed()
-    # Strategy pattern for feeding
-    strategy = CarnivoreFeedingTemplate() if animal.species == "Lion" else HerbivoreFeedingTemplate()
-    preparation = strategy.prepare_food(animal)
-    feeding = strategy.provide_food(animal)
+
+    preparation, feeding = FeedCommand(animal, food).execute()
+
     return JsonResponse({
         "preparation": preparation,
         "feeding": feeding,
@@ -95,7 +91,7 @@ def get_zookeepers(request):
 def get_food_inventory(request):
     """Fetch food inventory."""
     return JsonResponse(
-        [{"name": f.name, "quantity": f.quantity} for f in food_inventory if f.name.lower() != "water"],
+        [{"name": f.name, "quantity": f.quantity} for f in food_inventory],
         safe=False
     )
 

@@ -194,21 +194,21 @@
           </tbody>
         </table>
 
-        <!-- Zookeeper Section -->
-        <h2>Zookeepers</h2>
-        <!-- <button onclick="getZookeepers()">Get Zookeepers</button> -->
-        <input type="text" id="zookeeperName" placeholder="Enter zookeeper name">
-        <div id="zookeeperMessage" class="message"></div>
-        <table id="zookeeperTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Zookeeper rows will be dynamically added here -->
-          </tbody>
-        </table>
+<!--        &lt;!&ndash; Zookeeper Section &ndash;&gt;-->
+<!--        <h2>Zookeepers</h2>-->
+<!--        &lt;!&ndash; <button onclick="getZookeepers()">Get Zookeepers</button> &ndash;&gt;-->
+<!--        <input type="text" id="zookeeperName" placeholder="Enter zookeeper name">-->
+<!--        <div id="zookeeperMessage" class="message"></div>-->
+<!--        <table id="zookeeperTable">-->
+<!--          <thead>-->
+<!--            <tr>-->
+<!--              <th>Name</th>-->
+<!--            </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--            &lt;!&ndash; Zookeeper rows will be dynamically added here &ndash;&gt;-->
+<!--          </tbody>-->
+<!--        </table>-->
 
         <!-- Food Section -->
         <h2>Food Inventory</h2>
@@ -358,6 +358,10 @@
           const select = document.getElementById("foodSelect");
           select.innerHTML = "";
           data.forEach(food => {
+            if(food.name.toLowerCase() === "water") {
+              // Skip water, as it's handled separately
+              return;
+            }
             const option = document.createElement("option");
             option.value = food.name;
             option.textContent = `${food.name} (${food.quantity})`;

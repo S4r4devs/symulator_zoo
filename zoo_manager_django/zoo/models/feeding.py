@@ -9,15 +9,17 @@ class FeedingTemplate(ABC):
     def prepare_food(self, animal):
         pass
 
-    @abstractmethod
     def provide_food(self, animal):
-        pass
+        """Default implementation for providing food."""
+        animal.feed()
+
 
 class HerbivoreFeedingTemplate(FeedingTemplate):
     def prepare_food(self, animal):
         return f"Preparing vegetables for {animal.name}"
 
     def provide_food(self, animal):
+        super().provide_food(animal)
         return f"Feeding {animal.name} with vegetables"
 
 class CarnivoreFeedingTemplate(FeedingTemplate):
@@ -25,6 +27,7 @@ class CarnivoreFeedingTemplate(FeedingTemplate):
         return f"Preparing meat for {animal.name}"
 
     def provide_food(self, animal):
+        super().provide_food(animal)
         return f"Feeding {animal.name} with meat"
 
 class Feeder:

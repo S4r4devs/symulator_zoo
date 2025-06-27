@@ -4,12 +4,13 @@ from abc import abstractmethod
 
 class Animal:
     """Base class for all animals."""
-    def __init__(self, name, species, age):
+    def __init__(self, name, species, age, carnivore=False):
         self._name = name
         self._species = species
         self._age = age
         self._last_fed = 0
         self._last_watered = 0
+        self._carnivore = carnivore
 
     @property
     def name(self):
@@ -47,10 +48,14 @@ class Animal:
     def water(self):
         self._last_watered = time.time()
 
+    def is_carnivore(self):
+        """Check if the animal is a carnivore."""
+        return self._carnivore
+
 class Lion(Animal):
     """Lion class inheriting from Animal."""
     def __init__(self, name, age, roar_volume=80):
-        super().__init__(name, species="Lion", age=age)
+        super().__init__(name, species="Lion", age=age, carnivore=True)
         self.roar_volume = roar_volume
 
 class Elephant(Animal):
