@@ -158,7 +158,7 @@
     <form id="loginForm" style="background: rgba(34,34,34,0.95); border-radius: 16px; box-shadow: 0 0 32px var(--zoo-green); padding: 40px 32px; display: flex; flex-direction: column; align-items: center; min-width: 320px;">
       <h2 style="margin-bottom: 24px;">Login</h2>
       <input type="text" id="loginName" placeholder="Zookeeper name" autocomplete="username" style="width: 220px; margin-bottom: 16px;">
-      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" style="width: 220px; margin-bottom: 24px;">
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" style="width: 220px; margin-bottom: 24px;" onkeyup="if(event.key === 'Enter') login();">
       <button type="button" onclick="login()" style="width: 100%;">Login</button>
       <div id="loginMessage" class="message" style="margin-top: 18px; text-align: center;"></div>
       <div style="margin-top: 18px; color: #aaa; font-size: 11px; text-align: center;">
