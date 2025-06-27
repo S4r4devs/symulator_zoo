@@ -5,7 +5,7 @@ from zoo.models.animals import Lion, Elephant, Monkey, Giraffe, Parrot
 from zoo.models.exceptions import AnimalNotFoundException
 from zoo.models.feeding import HerbivoreFeedingTemplate, CarnivoreFeedingTemplate
 from zoo.models.zookeepers import Zookeeper
-from zoo.models.food import Food
+from zoo.models.food import Food, Water
 
 # Sample data
 animals = [
@@ -26,7 +26,7 @@ food_inventory = [
     Food("Carrots", 50),
     Food("Meat", 30),
     Food("Bananas", 20),
-    Food("Water", 100),
+    Water(100)
 ]
 
 def get_animals(request):
@@ -51,7 +51,7 @@ def feed_animal(request, animal_name):
     food_name = data.get("food", None)
     if not food_name:
         return JsonResponse({"error": "No food specified"}, status=400)
-    food = next((f for f in food_inventory if f.name == food_name), None)
+    food = next((f for f in food_inventory if f.name == food_name and f.name.lower() != "water"), None)
     if not food or food.quantity <= 0:
         return JsonResponse({"error": "Food not available"}, status=400)
     # Decrement food
@@ -95,7 +95,7 @@ def get_zookeepers(request):
 def get_food_inventory(request):
     """Fetch food inventory."""
     return JsonResponse(
-        [{"name": f.name, "quantity": f.quantity} for f in food_inventory],
+        [{"name": f.name, "quantity": f.quantity} for f in food_inventory if f.name.lower() != "water"],
         safe=False
     )
 

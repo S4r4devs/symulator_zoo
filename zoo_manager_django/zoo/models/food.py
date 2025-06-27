@@ -11,3 +11,8 @@ class Food:
     def quantity(self, value):
         if value >= 0:
             self._quantity = value
+
+class Water(Food):
+    """Specialized class for water, inheriting from Food."""
+    def __init__(self, quantity):
+        super().__init__("Water", quantity)
