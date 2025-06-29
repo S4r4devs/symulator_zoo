@@ -1,13 +1,16 @@
 import time
+from .state_calculator import MoodStateCalculator, StatusBarStateCalculator
+
 
 class Animal:
     """Base class for all animals."""
-    def __init__(self, name, species, age):
+    def __init__(self, name, species, age, carnivore=False):
         self._name = name
         self._species = species
         self._age = age
         self._last_fed = 0
         self._last_watered = 0
+        self._carnivore = carnivore
 
     @property
     def name(self):
@@ -33,27 +36,11 @@ class Animal:
 
     @property
     def status(self):
-        now = time.time()
-        fed_ok = now - self._last_fed < 3600
-        watered_ok = now - self._last_watered < 3600
-        if fed_ok and watered_ok:
-            return "happy"
-        elif fed_ok or watered_ok:
-            return "neutral"
-        else:
-            return "sad"
+        return MoodStateCalculator().calculate(self._last_fed, self._last_watered)
 
     @property
     def status_bar(self):
-        now = time.time()
-        fed_ok = now - self._last_fed < 3600
-        watered_ok = now - self._last_watered < 3600
-        if fed_ok and watered_ok:
-            return "green"
-        elif fed_ok or watered_ok:
-            return "yellow"
-        else:
-            return "red"
+        return StatusBarStateCalculator().calculate(self._last_fed, self._last_watered)
 
     def feed(self):
         self._last_fed = time.time()
@@ -61,10 +48,14 @@ class Animal:
     def water(self):
         self._last_watered = time.time()
 
+    def is_carnivore(self):
+        """Check if the animal is a carnivore."""
+        return self._carnivore
+
 class Lion(Animal):
     """Lion class inheriting from Animal."""
     def __init__(self, name, age, roar_volume=80):
-        super().__init__(name, species="Lion", age=age)
+        super().__init__(name, species="Lion", age=age, carnivore=True)
         self.roar_volume = roar_volume
 
 class Elephant(Animal):
@@ -87,3 +78,7 @@ class Parrot(Animal):
     """Elephant class inheriting from Animal."""
     def __init__(self, name, age):
         super().__init__(name, species="Parrot", age=age)
+
+
+
+

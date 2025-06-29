@@ -158,7 +158,7 @@
     <form id="loginForm" style="background: rgba(34,34,34,0.95); border-radius: 16px; box-shadow: 0 0 32px var(--zoo-green); padding: 40px 32px; display: flex; flex-direction: column; align-items: center; min-width: 320px;">
       <h2 style="margin-bottom: 24px;">Login</h2>
       <input type="text" id="loginName" placeholder="Zookeeper name" autocomplete="username" style="width: 220px; margin-bottom: 16px;">
-      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" style="width: 220px; margin-bottom: 24px;">
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" style="width: 220px; margin-bottom: 24px;" onkeyup="if(event.key === 'Enter') login();">
       <button type="button" onclick="login()" style="width: 100%;">Login</button>
       <div id="loginMessage" class="message" style="margin-top: 18px; text-align: center;"></div>
       <div style="margin-top: 18px; color: #aaa; font-size: 11px; text-align: center;">
@@ -194,21 +194,21 @@
           </tbody>
         </table>
 
-        <!-- Zookeeper Section -->
-        <h2>Zookeepers</h2>
-        <!-- <button onclick="getZookeepers()">Get Zookeepers</button> -->
-        <input type="text" id="zookeeperName" placeholder="Enter zookeeper name">
-        <div id="zookeeperMessage" class="message"></div>
-        <table id="zookeeperTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Zookeeper rows will be dynamically added here -->
-          </tbody>
-        </table>
+<!--        &lt;!&ndash; Zookeeper Section &ndash;&gt;-->
+<!--        <h2>Zookeepers</h2>-->
+<!--        &lt;!&ndash; <button onclick="getZookeepers()">Get Zookeepers</button> &ndash;&gt;-->
+<!--        <input type="text" id="zookeeperName" placeholder="Enter zookeeper name">-->
+<!--        <div id="zookeeperMessage" class="message"></div>-->
+<!--        <table id="zookeeperTable">-->
+<!--          <thead>-->
+<!--            <tr>-->
+<!--              <th>Name</th>-->
+<!--            </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--            &lt;!&ndash; Zookeeper rows will be dynamically added here &ndash;&gt;-->
+<!--          </tbody>-->
+<!--        </table>-->
 
         <!-- Food Section -->
         <h2>Food Inventory</h2>
@@ -358,6 +358,10 @@
           const select = document.getElementById("foodSelect");
           select.innerHTML = "";
           data.forEach(food => {
+            if(food.name.toLowerCase() === "water") {
+              // Skip water, as it's handled separately
+              return;
+            }
             const option = document.createElement("option");
             option.value = food.name;
             option.textContent = `${food.name} (${food.quantity})`;

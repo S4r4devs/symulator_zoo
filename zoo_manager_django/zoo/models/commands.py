@@ -1,3 +1,7 @@
+#import necessary modules from same package
+
+from zoo.models.feeding import HerbivoreFeedingTemplate, CarnivoreFeedingTemplate
+
 class Command:
     """Base class for all commands."""
     def execute(self):
@@ -11,4 +15,11 @@ class FeedCommand(Command):
         self.food = food
 
     def execute(self):
-        return f"Feeding {self.animal.name} with {self.food.name}"
+        # Strategy pattern for feeding
+        strategy = CarnivoreFeedingTemplate() if self.animal.is_carnivore() else HerbivoreFeedingTemplate()
+        preparation = strategy.prepare_food(self.animal)
+        feeding = strategy.provide_food(self.animal)
+
+        self.food.quantity = self.food.quantity - 1
+
+        return preparation, feeding
