@@ -2,7 +2,7 @@ from django.http import JsonResponse
 import json
 import time
 
-from zoo_manager_django.zoo.models.zoo_service import ZooService
+from zoo.models.zoo_service import ZooService
 
 
 def get_animals(request):

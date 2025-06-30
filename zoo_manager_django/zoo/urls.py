@@ -1,5 +1,5 @@
 from django.urls import path
-from zoo_manager_django.zoo import views
+from zoo import views
 
 urlpatterns = [
     path("animals/", views.get_animals),

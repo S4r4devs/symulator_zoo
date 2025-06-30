@@ -1,6 +1,6 @@
 import time
 
-from zoo_manager_django.zoo.models.moving_strategy import Big_Animal_Moving, Jumping_Animal_Moving, \
+from zoo.models.moving_strategy import Big_Animal_Moving, Jumping_Animal_Moving, \
     Flying_Animal_Moving, Small_Animal_Moving
 
 

@@ -1,15 +1,13 @@
 import json
 from django.http import HttpResponseNotFound, JsonResponse, HttpResponseBadRequest
 
-from zoo_manager_django.zoo.models.animals import EuropeanHamster, Lion, Elephant, Monkey, Giraffe, Parrot
-from zoo_manager_django.zoo.models.department import Department
-from zoo_manager_django.zoo.models.exceptions import AnimalNotFoundException
-from zoo_manager_django.zoo.models.feeding import CarnivoreFeedingTemplate, \
-    HerbivoreFeedingTemplate
-from zoo_manager_django.zoo.models.supply import Supply
-from zoo_manager_django.zoo.models.maintenance import BigAnimalMaintenanceTemplate, \
-    SmallAnimalMaintenanceTemplate
-from zoo_manager_django.zoo.models.zookeepers import Zookeeper
+from zoo.models.animals import EuropeanHamster, Lion, Elephant, Monkey, Giraffe, Parrot
+from zoo.models.department import Department
+from zoo.models.exceptions import AnimalNotFoundException
+from zoo.models.feeding import CarnivoreFeedingTemplate, HerbivoreFeedingTemplate
+from zoo.models.supply import Supply
+from zoo.models.maintenance import BigAnimalMaintenanceTemplate, SmallAnimalMaintenanceTemplate
+from zoo.models.zookeepers import Zookeeper
 
 
 class ZooService:
