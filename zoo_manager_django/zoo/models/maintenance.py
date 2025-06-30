@@ -27,6 +27,12 @@ class MaintenanceTemplate(ABC):
             return JsonResponse({"error": "No water available"}, status=400)
         water_reservoir[0].quantity -= 1
         animal.water()
+        return JsonResponse({
+            "message": f"{animal.name} has been given water.",
+            "status": animal.status,
+            "status_bar": animal.status_bar,
+
+        })
 
     @abstractmethod
     def check_enclosure_security(self, animal):

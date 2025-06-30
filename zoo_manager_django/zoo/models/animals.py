@@ -1,18 +1,19 @@
 import time
-
+from .state_calculator import MoodStateCalculator, StatusBarStateCalculator
 from zoo.models.moving_strategy import Big_Animal_Moving, Jumping_Animal_Moving, \
     Flying_Animal_Moving, Small_Animal_Moving
 
 
 class Animal:
     """Base class for all animals."""
-    def __init__(self, name, species, age, moving_strategy):
+    def __init__(self, name, species, age, moving_strategy, carnivore=False):
         self._name = name
         self._species = species
         self._age = age
         self._moving_strategy = moving_strategy
         self._last_fed = 0
         self._last_watered = 0
+        self._carnivore = carnivore
 
     @property
     def name(self):
@@ -42,27 +43,11 @@ class Animal:
 
     @property
     def status(self):
-        now = time.time()
-        fed_ok = now - self._last_fed < 3600
-        watered_ok = now - self._last_watered < 3600
-        if fed_ok and watered_ok:
-            return "happy"
-        elif fed_ok or watered_ok:
-            return "neutral"
-        else:
-            return "sad"
+        return MoodStateCalculator().calculate(self._last_fed, self._last_watered)
 
     @property
     def status_bar(self):
-        now = time.time()
-        fed_ok = now - self._last_fed < 36000
-        watered_ok = now - self._last_watered < 36000
-        if fed_ok and watered_ok:
-            return "green"
-        elif fed_ok or watered_ok:
-            return "yellow"
-        else:
-            return "red"
+        return StatusBarStateCalculator().calculate(self._last_fed, self._last_watered)
 
     def feed(self):
         self._last_fed = time.time()
@@ -70,9 +55,13 @@ class Animal:
     def water(self):
         self._last_watered = time.time()
 
+    def is_carnivore(self):
+        """Check if the animal is a carnivore."""
+        return self._carnivore
+
 class Lion(Animal):
     def __init__(self, name, age, roar_volume=80):
-        super().__init__(name,species="Lion", age=age, moving_strategy=Big_Animal_Moving())
+        super().__init__(name,species="Lion", age=age, moving_strategy=Big_Animal_Moving(), carnivore=True)
         self.roar_volume = roar_volume
 
 class Elephant(Animal):

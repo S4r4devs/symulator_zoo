@@ -11,6 +11,9 @@ def get_animals(request):
 def feed_animal(request, animal_name):
     return ZooService.feeding(request, animal_name)
 
+def water_animal(request, animal_name):
+    return ZooService.water(animal_name)
+
 def maintenance(request, animal_name):
     return ZooService.maintenance(animal_name)
 

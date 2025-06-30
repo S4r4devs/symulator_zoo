@@ -11,3 +11,7 @@ class Supply:
     def quantity(self, value):
         if value >= 0:
             self._quantity = value
+
+class Water(Supply):
+    def __init__(self, quantity):
+        super().__init__("Water", quantity)

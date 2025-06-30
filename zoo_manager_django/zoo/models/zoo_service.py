@@ -5,7 +5,7 @@ from zoo.models.animals import EuropeanHamster, Lion, Elephant, Monkey, Giraffe,
 from zoo.models.department import Department
 from zoo.models.exceptions import AnimalNotFoundException
 from zoo.models.feeding import CarnivoreFeedingTemplate, HerbivoreFeedingTemplate
-from zoo.models.supply import Supply
+from zoo.models.supply import Supply, Water
 from zoo.models.maintenance import BigAnimalMaintenanceTemplate, SmallAnimalMaintenanceTemplate
 from zoo.models.zookeepers import Zookeeper
 
@@ -18,7 +18,10 @@ class ZooService:
         Zookeeper("Sara"),
     ]
 
+    _water_reservoir = [ Water(10000) ]
+
     _food_inventory = [
+        _water_reservoir[0],
         Supply("Carrots", 50),
         Supply("Meat", 30),
         Supply("Bananas", 20),
@@ -26,7 +29,6 @@ class ZooService:
         Supply("Seeds", 578)
     ]
 
-    _water_reservoir = Supply("Water", 10000),
 
     _departments = {
         "Simba": Department(Lion("Simba", 5), CarnivoreFeedingTemplate(), BigAnimalMaintenanceTemplate()),
@@ -43,6 +45,13 @@ class ZooService:
         if not department:
             return HttpResponseNotFound(str(AnimalNotFoundException(name)))
         return department.feed.feed(request, department.animal, ZooService._food_inventory)
+
+    @staticmethod
+    def water(name):
+        department = ZooService._departments[name]
+        if not department:
+            return HttpResponseNotFound(str(AnimalNotFoundException(name)))
+        return department.maintenance.refill_water(department.animal, ZooService._water_reservoir)
 
     @staticmethod
     def maintenance(name):
