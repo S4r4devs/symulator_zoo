@@ -1,4 +1,4 @@
-class Food:
+class Supply:
     def __init__(self, name, quantity):
         self.name = name
         self._quantity = quantity
