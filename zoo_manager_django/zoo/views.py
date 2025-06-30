@@ -6,13 +6,7 @@ from zoo_manager_django.zoo.models.zoo_service import ZooService
 
 
 def get_animals(request):
-    """Fetch all animals and their details."""
-    return JsonResponse(
-        [{
-            "name": "name"
-        }],
-        safe=False
-    )
+    return ZooService.get_animals(request)
 
 def feed_animal(request, animal_name):
     return ZooService.feeding(request, animal_name)

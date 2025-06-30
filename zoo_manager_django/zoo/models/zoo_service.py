@@ -14,16 +14,6 @@ from zoo_manager_django.zoo.models.zookeepers import Zookeeper
 
 class ZooService:
 
-    animals = [
-        Lion("Simba", 5),
-        Elephant("Dumbo", 10),
-        Monkey("George", 3),
-        Giraffe("Melman", 7),
-        Parrot("Polly", 2),
-        EuropeanHamster("Borubar", 1000),
-
-    ]
-
     _zookeepers = [
         Zookeeper("Alex"),
         Zookeeper("Justyna"),
@@ -85,6 +75,19 @@ class ZooService:
         """Fetch all zookeepers."""
         return JsonResponse(
             [{"name": zk.name} for zk in ZooService._zookeepers],
+            safe=False
+        )
+
+    def get_animals(request):
+        """Fetch all animals and their details."""
+        return JsonResponse(
+            [{
+                "name": ZooService._departments[key].animal.name,
+                "species": ZooService._departments[key].animal.species,
+                "age": ZooService._departments[key].animal.age,
+                "status": ZooService._departments[key].animal.status,
+                "status_bar": ZooService._departments[key].animal.status_bar
+            } for key in ZooService._departments],
             safe=False
         )
 
