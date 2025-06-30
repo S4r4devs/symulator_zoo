@@ -19,7 +19,7 @@ class FeedingTemplate(ABC):
         self.feed_animal(food_name, food_inventory, animal)
 
         return JsonResponse({
-            "message": f"{animal.name} has been given water.",
+            "message": f"{animal.name} has been given {food_name}.",
             "provide_food" : provide_food,
             "prepare_food" : prepare_food,
             "status_bar": animal.status_bar,

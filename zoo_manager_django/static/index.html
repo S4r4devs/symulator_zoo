@@ -326,7 +326,7 @@
           getAnimals();
           getFood();
           if (loggedInZookeeper && name && food) {
-            addLogEntry(`<b>${loggedInZookeeper}</b> fed <b>${name}</b> with <b>${food}</b>`);
+            addLogEntry(`<b>${loggedInZookeeper}</b>: <b>${data.message}</b>`);
           }
         });
     }
@@ -350,7 +350,7 @@
         });
     }
 
-  
+
     // Fetch and display food inventory
     function getFood() {
       fetch("/food/")
@@ -394,7 +394,7 @@
           getAnimals();
           getFood();
           if (loggedInZookeeper && name ) {
-            addLogEntry(`<b>${loggedInZookeeper}</b> watered <b>${name}</b>`);
+            addLogEntry(`<b>${loggedInZookeeper}</b>: <b>${data.message}</b>`);
           }
         });
     }
@@ -407,6 +407,7 @@
           document.getElementById("message").textContent = data.message + " Status: " + data.status;
           getAnimals();
           getFood();
+          addLogEntry(`<b>${loggedInZookeeper}</b>: <b>${data.message}</b>`);
         });
     }
 

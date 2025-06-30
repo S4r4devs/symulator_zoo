@@ -10,7 +10,7 @@ class MaintenanceTemplate(ABC):
         enclosure = self.check_enclosure_security(animal)
         inspect = self.inspect_animals_health(animal)
         return JsonResponse({
-            "message": f"{animal.name} has been given water.",
+            "message": f"{animal.name} has its enclosure maintained.",
             "status": animal.status,
             "maintenance": waste,
             "status_bar": animal.status_bar,
