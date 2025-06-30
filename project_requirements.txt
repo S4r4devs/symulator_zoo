@@ -19,6 +19,10 @@
     HerbivoreFeeding, CarnivoreFeeding inherit from Feeder
     zoo/models/exceptions.py:
     AnimalNotFoundException inherits from Exception
+    zoo/models/food.py:
+    Water inherits from Food
+    zoo/models/state_calculator.py:
+    MoodStateCalculator, StatusBarStateCalculator inherit from StateCalculatorTemplate
 
 3. Use of attributes in classes; demonstration of overriding attributes in child classes
 
@@ -52,6 +56,7 @@
 
     zoo/models/animals.py:
     name, age properties with setters/getters
+    is_carnivore
     zoo/models/food.py:
     quantity property with setter/getter
 
@@ -83,8 +88,8 @@
     zoo/models/feeding.py:
     FeedingTemplate, HerbivoreFeedingTemplate, CarnivoreFeedingTemplate
     Usage:
-    zoo/views.py:
-    strategy = CarnivoreFeedingTemplate() if animal.species == "Lion" else HerbivoreFeedingTemplate()
+    zoo/commands.py:
+    strategy = CarnivoreFeedingTemplate() if self.animal.is_carnivore() else HerbivoreFeedingTemplate()
 
 12. Use of the design pattern: Command
 
@@ -95,3 +100,5 @@
 
     zoo/models/feeding.py:
     FeedingTemplate defines the template method feed, which calls prepare_food and provide_food (overridden in subclasses)
+    zoo/models/state_calculator.py:
+    StateCalculatorTemplate defines the template method calculate_state, which calls low, mid and high (overridden in subclasses)
