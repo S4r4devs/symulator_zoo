@@ -176,7 +176,7 @@
         <input type="text" id="animalName" placeholder="Enter animal name">
         <select id="foodSelect"></select>
         <button onclick="feedAnimal()">Feed Animal</button>
-        <button onclick="waterAnimal()">Give Water</button>
+        <button onclick="waterAnimal()">Maintain Enclosure</button>
         <div id="message" class="message"></div>
         <table id="animalTable">
           <thead>
@@ -382,7 +382,7 @@
 
     function waterAnimal() {
       const name = document.getElementById("animalName").value;
-      fetch(`/water/${name}/`, { method: "POST" })
+      fetch(`/maintenance/${name}/`, { method: "POST" })
         .then(res => res.json())
         .then(data => {
           document.getElementById("message").textContent = data.message + " Status: " + data.status;

@@ -23,9 +23,7 @@ class ZooService:
         Supply("Meat", 30),
         Supply("Bananas", 20),
         Supply("Tree foliage", 75),
-        Supply("Seeds", 578),
-        Supply("Test", 0),
-
+        Supply("Seeds", 578)
     ]
 
     _water_reservoir = Supply("Water", 10000),
