@@ -1,9 +1,36 @@
 from abc import ABC, abstractmethod
+import json
+from django.http import JsonResponse
+
 
 class FeedingTemplate(ABC):
-    def feed(self, animal):
-        self.prepare_food(animal)
-        return self.provide_food(animal)
+
+    def feed(self, request,  animal, food_inventory):
+        data = json.loads(request.body) if request.method == "POST" else {}
+        food_name = data.get("food", None)
+        if not food_name:
+            return JsonResponse({"error": "No food specified"}, status=400)
+        food = next((f for f in food_inventory if f.name == food_name), None)
+        if not food or food.quantity <= 0:
+            return JsonResponse({"error": "Food not available"}, status=400)
+
+        prepare_food = self.prepare_food(animal)
+        provide_food = self.provide_food(animal)
+        self.feed_animal(food_name, food_inventory, animal)
+
+        return JsonResponse({
+            "message": f"{animal.name} has been given {food_name}.",
+            "provide_food" : provide_food,
+            "prepare_food" : prepare_food,
+            "status_bar": animal.status_bar,
+            "status": animal.status
+        })
+
+    def feed_animal(self, food_name, food_inventory, animal):
+        food = next((f for f in food_inventory if f.name == food_name), None)
+        food.quantity -= 1
+        animal.feed()
+
 
     @abstractmethod
     def prepare_food(self, animal):
@@ -30,14 +57,4 @@ class CarnivoreFeedingTemplate(FeedingTemplate):
         super().provide_food(animal)
         return f"Feeding {animal.name} with meat"
 
-class Feeder:
-    def feed(self, animal):
-        raise NotImplementedError("This method should be overridden in subclasses")
 
-class HerbivoreFeeding(Feeder):
-    def feed(self, animal):
-        return f"Feeding {animal.name} with plants"
-
-class CarnivoreFeeding(Feeder):
-    def feed(self, animal):
-        return f"Feeding {animal.name} with meat"

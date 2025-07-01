@@ -59,7 +59,7 @@
     zoo/models/animals.py:
     name, age properties with setters/getters
     is_carnivore
-    zoo/models/food.py:
+    zoo/models/supply.py:
     quantity property with setter/getter
 
 8. Polymorphism
@@ -69,7 +69,7 @@
     zoo/models/feeding.py:
     All feeders/templates can be used as their parent type
     zoo/models/commands.py:
-    All commands can be used as Command
+    FeedCommand command can be used as Command
 
 9. Use of parent class implementation: super()
 
@@ -83,20 +83,20 @@
     zoo/models/exceptions.py:
     AnimalNotFoundException
     Usage:
-    zoo/views.py: used in feed_animal and water_animal
+    zoo/zoo_service.py: used in feeding, water, maintenance, move
 
 11. Use of the design pattern: Strategy
 
     zoo/models/feeding.py:
     FeedingTemplate, HerbivoreFeedingTemplate, CarnivoreFeedingTemplate
     Usage:
-    zoo/commands.py:
-    strategy = CarnivoreFeedingTemplate() if self.animal.is_carnivore() else HerbivoreFeedingTemplate()
+    zoo/department.py:
+    CarnivoreFeedingTemplate() if animal.is_carnivore() else HerbivoreFeedingTemplate()
 
 12. Use of the design pattern: Command
 
     zoo/models/commands.py:
-    Command, FeedCommand
+    Command, FeedCommand, WaterCommand, MaintainCommand
 
 13. Use of the design pattern: Template Method
 

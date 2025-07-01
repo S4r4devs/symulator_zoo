@@ -177,6 +177,7 @@
         <select id="foodSelect"></select>
         <button onclick="feedAnimal()">Feed Animal</button>
         <button onclick="waterAnimal()">Give Water</button>
+        <button onclick="maintainEnclosure()">Maintain Enclosure</button>
         <div id="message" class="message"></div>
         <table id="animalTable">
           <thead>
@@ -325,7 +326,7 @@
           getAnimals();
           getFood();
           if (loggedInZookeeper && name && food) {
-            addLogEntry(`<b>${loggedInZookeeper}</b> fed <b>${name}</b> with <b>${food}</b>`);
+            addLogEntry(`<b>${loggedInZookeeper}</b>: <b>${data.message}</b>`);
           }
         });
     }
@@ -349,7 +350,7 @@
         });
     }
 
-  
+
     // Fetch and display food inventory
     function getFood() {
       fetch("/food/")
@@ -392,6 +393,21 @@
           document.getElementById("message").textContent = data.message + " Status: " + data.status;
           getAnimals();
           getFood();
+          if (loggedInZookeeper && name ) {
+            addLogEntry(`<b>${loggedInZookeeper}</b>: <b>${data.message}</b>`);
+          }
+        });
+    }
+
+    function maintainEnclosure() {
+      const name = document.getElementById("animalName").value;
+      fetch(`/maintenance/${name}/`, { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("message").textContent = data.message + " Status: " + data.status;
+          getAnimals();
+          getFood();
+          addLogEntry(`<b>${loggedInZookeeper}</b>: <b>${data.message}</b>`);
         });
     }
 
