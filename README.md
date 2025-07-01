@@ -96,7 +96,7 @@
 12. Use of the design pattern: Command
 
     zoo/models/commands.py:
-    Command, FeedCommand
+    Command, FeedCommand, WaterCommand, MaintainCommand
 
 13. Use of the design pattern: Template Method
 

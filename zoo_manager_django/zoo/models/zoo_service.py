@@ -8,6 +8,8 @@ from zoo.models.supply import Supply, Water
 from zoo.models.maintenance import BigAnimalMaintenanceTemplate, SmallAnimalMaintenanceTemplate
 from zoo.models.zookeepers import Zookeeper
 
+from zoo.models.commands import FeedCommand, WaterCommand, MaintainCommand
+
 
 class ZooService:
 
@@ -43,21 +45,24 @@ class ZooService:
         department = ZooService._departments[name]
         if not department:
             return HttpResponseNotFound(str(AnimalNotFoundException(name)))
-        return department.feed.feed(request, department.animal, ZooService._food_inventory)
+        command = FeedCommand(request, department, ZooService._food_inventory)
+        return command.execute()
 
     @staticmethod
     def water(name):
         department = ZooService._departments[name]
         if not department:
             return HttpResponseNotFound(str(AnimalNotFoundException(name)))
-        return department.maintenance.refill_water(department.animal, ZooService._water_reservoir)
+        command = WaterCommand(department, ZooService._water_reservoir)
+        return command.execute()
 
     @staticmethod
     def maintenance(name):
         department = ZooService._departments[name]
         if not department:
             return HttpResponseNotFound(str(AnimalNotFoundException(name)))
-        return department.maintenance.maintain_enclosure(department.animal, ZooService._water_reservoir)
+        command = MaintainCommand(department, ZooService._water_reservoir)
+        return command.execute()
 
     @staticmethod
     def move(name):
