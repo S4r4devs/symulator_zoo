@@ -4,10 +4,11 @@ from django.http import HttpResponseNotFound, JsonResponse, HttpResponseBadReque
 from zoo.models.animals import EuropeanHamster, Lion, Elephant, Monkey, Giraffe, Parrot
 from zoo.models.department import Department
 from zoo.models.exceptions import AnimalNotFoundException
-from zoo.models.feeding import CarnivoreFeedingTemplate, HerbivoreFeedingTemplate
 from zoo.models.supply import Supply, Water
 from zoo.models.maintenance import BigAnimalMaintenanceTemplate, SmallAnimalMaintenanceTemplate
 from zoo.models.zookeepers import Zookeeper
+
+from zoo.models.commands import FeedCommand, WaterCommand, MaintainCommand
 
 
 class ZooService:
@@ -31,12 +32,12 @@ class ZooService:
 
 
     _departments = {
-        "Simba": Department(Lion("Simba", 5), CarnivoreFeedingTemplate(), BigAnimalMaintenanceTemplate()),
-        "Dumbo": Department(Elephant("Dumbo", 10), HerbivoreFeedingTemplate(), BigAnimalMaintenanceTemplate()),
-        "George": Department(Monkey("George", 3), HerbivoreFeedingTemplate(), BigAnimalMaintenanceTemplate()),
-        "Melman": Department(Giraffe("Melman", 7), HerbivoreFeedingTemplate(), BigAnimalMaintenanceTemplate()),
-        "Polly": Department(Parrot("Polly", 2), HerbivoreFeedingTemplate(), SmallAnimalMaintenanceTemplate()),
-        "Borubar": Department(EuropeanHamster("Borubar", 1000), HerbivoreFeedingTemplate(), SmallAnimalMaintenanceTemplate()),
+        "Simba": Department(Lion("Simba", 5), BigAnimalMaintenanceTemplate()),
+        "Dumbo": Department(Elephant("Dumbo", 10), BigAnimalMaintenanceTemplate()),
+        "George": Department(Monkey("George", 3), BigAnimalMaintenanceTemplate()),
+        "Melman": Department(Giraffe("Melman", 7), BigAnimalMaintenanceTemplate()),
+        "Polly": Department(Parrot("Polly", 2), SmallAnimalMaintenanceTemplate()),
+        "Borubar": Department(EuropeanHamster("Borubar", 1000), SmallAnimalMaintenanceTemplate()),
     }
 
     @staticmethod
@@ -44,21 +45,24 @@ class ZooService:
         department = ZooService._departments[name]
         if not department:
             return HttpResponseNotFound(str(AnimalNotFoundException(name)))
-        return department.feed.feed(request, department.animal, ZooService._food_inventory)
+        command = FeedCommand(request, department, ZooService._food_inventory)
+        return command.execute()
 
     @staticmethod
     def water(name):
         department = ZooService._departments[name]
         if not department:
             return HttpResponseNotFound(str(AnimalNotFoundException(name)))
-        return department.maintenance.refill_water(department.animal, ZooService._water_reservoir)
+        command = WaterCommand(department, ZooService._water_reservoir)
+        return command.execute()
 
     @staticmethod
     def maintenance(name):
         department = ZooService._departments[name]
         if not department:
             return HttpResponseNotFound(str(AnimalNotFoundException(name)))
-        return department.maintenance.maintain_enclosure(department.animal, ZooService._water_reservoir)
+        command = MaintainCommand(department, ZooService._water_reservoir)
+        return command.execute()
 
     @staticmethod
     def move(name):

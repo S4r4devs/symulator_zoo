@@ -1,8 +1,10 @@
+from zoo.models.feeding import CarnivoreFeedingTemplate, HerbivoreFeedingTemplate
+
 class Department:
 
-    def __init__(self,animal, feed, maintenance):
+    def __init__(self, animal, maintenance):
         self._animal = animal
-        self._feed = feed
+        self._feed = CarnivoreFeedingTemplate() if animal.is_carnivore() else HerbivoreFeedingTemplate()
         self._maintenance = maintenance
 
     @property

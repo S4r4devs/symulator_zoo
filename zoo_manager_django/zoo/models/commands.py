@@ -1,6 +1,5 @@
 #import necessary modules from same package
 
-from zoo.models.feeding import HerbivoreFeedingTemplate, CarnivoreFeedingTemplate
 
 class Command:
     """Base class for all commands."""
@@ -10,16 +9,31 @@ class Command:
 
 class FeedCommand(Command):
     """Command to feed an animal."""
-    def __init__(self, animal, food):
-        self.animal = animal
-        self.food = food
+    def __init__(self, request, department, supplies):
+        self.request = request
+        self.department = department
+        self.supplies = supplies
 
     def execute(self):
-        # Strategy pattern for feeding
-        strategy = CarnivoreFeedingTemplate() if self.animal.is_carnivore() else HerbivoreFeedingTemplate()
-        preparation = strategy.prepare_food(self.animal)
-        feeding = strategy.provide_food(self.animal)
+        """Feed the animal in the department."""
+        return self.department.feed.feed(self.request, self.department.animal, self.supplies)
 
-        self.food.quantity = self.food.quantity - 1
+class WaterCommand(Command):
+    """Command to water an animal."""
+    def __init__(self, department, supplies):
+        self.department = department
+        self.supplies = supplies
 
-        return preparation, feeding
+    def execute(self):
+        """Water the animal in the department."""
+        return self.department.maintenance.refill_water(self.department.animal, self.supplies)
+
+class MaintainCommand(Command):
+    """Command to maintain an animal's enclosure."""
+    def __init__(self, department, supplies):
+        self.department = department
+        self.supplies = supplies
+
+    def execute(self):
+        """Maintain the enclosure of the animal in the department."""
+        return self.department.maintenance.maintain_enclosure(self.department.animal, self.supplies)
